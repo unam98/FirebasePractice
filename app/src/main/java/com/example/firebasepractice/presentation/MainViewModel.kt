@@ -7,8 +7,7 @@ import com.example.firebasepractice.data.MainData
 class MainViewModel : ViewModel() {
 
     val mainData = MutableLiveData<MainData>()
+    val mainDataList = MutableLiveData<List<MainData>>()
 
-    val imageUrl = MutableLiveData<String>()
-    val placeName = MutableLiveData<String>()
 
 }
