@@ -9,11 +9,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DecodeFormat
 import com.example.firebasepractice.data.MainData
 import com.example.firebasepractice.databinding.ItemMainBinding
+import com.example.util.callback.OnItemClick
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
-class MainAdapter :
+class MainAdapter(private val itemClickListener: OnItemClick) :
     ListAdapter<MainData, MainAdapter.MainItemViewHolder>(Differ) {
+
 
     inner class MainItemViewHolder(
         private val binding: ItemMainBinding,
@@ -24,9 +26,14 @@ class MainAdapter :
                 tvMain.text = data.placeName
                 Glide.with(itemView)
                     .load(data.imageUrl)
-                    .thumbnail(0.3f).format(DecodeFormat.PREFER_RGB_565)
                     .centerCrop()
                     .into(ivMain)
+            }
+        }
+
+        fun bindViews(data: MainData) {
+            binding.root.setOnClickListener {
+                itemClickListener.selectItem(data)
             }
         }
     }
@@ -39,6 +46,7 @@ class MainAdapter :
 
     override fun onBindViewHolder(holder: MainItemViewHolder, position: Int) {
         holder.bindData(currentList[position])
+        holder.bindViews(currentList[position])
     }
 
     object Differ : DiffUtil.ItemCallback<MainData>() {

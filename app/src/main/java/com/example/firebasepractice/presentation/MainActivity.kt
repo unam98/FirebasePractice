@@ -1,21 +1,23 @@
 package com.example.firebasepractice.presentation
 
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
 import com.example.firebasepractice.R
 import com.example.firebasepractice.data.MainData
 import com.example.firebasepractice.databinding.ActivityMainBinding
 import com.example.firebasepractice.presentation.adapter.MainAdapter
+import com.example.firebasepractice.presentation.detail.DetailActivity
+import com.example.util.callback.OnItemClick
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnItemClick {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainAdapter: MainAdapter
@@ -34,12 +36,15 @@ class MainActivity : AppCompatActivity() {
         binding.model = viewModel
         binding.lifecycleOwner = this
 
-        mainAdapter = MainAdapter()
-        binding.recyclerViewMain.adapter = mainAdapter
-
+        initAdapter()
         addObserver()
         getFirebaseData()
 
+    }
+
+    private fun initAdapter() {
+        mainAdapter = MainAdapter(this)
+        binding.recyclerViewMain.adapter = mainAdapter
     }
 
     private fun getFirebaseData() {
@@ -50,12 +55,11 @@ class MainActivity : AppCompatActivity() {
                     val imageUrl = document.data.get("imageUrl") // attribute 별 data 수신
                     val placeName = document.data.get("name")
 
-                    val inputData =
+                    val mainData =
                         MainData(imageUrl = imageUrl.toString(), placeName = placeName.toString())
-                    mainDataList.add(inputData)
+                    mainDataList.add(mainData)
                 }
                 viewModel.mainDataList.value = mainDataList
-                Log.d(TAG, "mainDataList 값 : $mainDataList")
                 Log.d(TAG, "뷰모델 mainDataList 값 : ${viewModel.mainDataList.value}")
             }
             .addOnFailureListener { exception ->
@@ -67,5 +71,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.mainDataList.observe(this) {
             mainAdapter.submitList(viewModel.mainDataList.value)
         }
+    }
+
+    override fun selectItem(id: MainData) {
+        val intent = Intent(this, DetailActivity::class.java).apply {
+            putExtra("MainData", id)
+        }
+        startActivity(intent)
     }
 }
