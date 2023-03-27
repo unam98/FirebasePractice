@@ -5,9 +5,11 @@ import android.graphics.Color
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.example.firebasepractice.R
 
 //@SuppressLint("UseCompatLoadingForDrawables")
 //@BindingAdapter("app:textView_touch_gitItem")
@@ -23,7 +25,7 @@ import com.bumptech.glide.Glide
 @BindingAdapter("app:layout_touch_gitItem")
 fun ConstraintLayout.layouttouch(selected: Boolean) {
     if (selected) {
-        setBackgroundColor(Color.parseColor("#D3D3D3"))
+        setBackgroundColor(ContextCompat.getColor(context, R.color.M1))
     } else {
         setBackgroundColor(Color.parseColor("#FFFFFF"))
     }

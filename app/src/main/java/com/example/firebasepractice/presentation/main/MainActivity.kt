@@ -1,11 +1,13 @@
 package com.example.firebasepractice.presentation.main
 
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.selection.SelectionTracker
 import com.example.firebasepractice.R
@@ -44,12 +46,13 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         initAdapter()
         addObserver()
         getFirebaseData()
+        deleteData()
         addTrackerObserver() //selection
 
     }
 
     private fun initAdapter() {
-        mainAdapter = MainAdapter(this, this)
+        mainAdapter = MainAdapter(this)
         binding.recyclerViewMain.adapter = mainAdapter
     }
 
@@ -84,22 +87,30 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         selectionTracker =
             setSelectionTracker("StorageMyDrawSelectionTracker", binding.recyclerViewMain)
         selectionTracker.addObserver((object : SelectionTracker.SelectionObserver<Long>() {
+
+
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
                 val items = selectionTracker.selection.size()
-                if (items == 0) binding.enabled = false
-                else binding.enabled = items >= 1 // 선택된 아이템이 1개 이상일 경우 floating button 활성화
+                Log.d(ContentValues.TAG, "items 사이즈?: $items")
+                if (items == 0) {
+                    binding.btnDelete.setBackgroundResource(R.drawable.radius_10_g3_button)
+                    binding.enabled = false
+                } else if (items >= 1) {
+                    binding.btnDelete.setBackgroundResource(R.drawable.radius_10_m1_button)
+                    binding.enabled = true
+                } // 선택된 아이템이 1개 이상일 경우 button 활성화 (floating button하고 그냥 버튼하고 기본 지원 옵션이 좀 다른 듯함.)
 
             }
         }))
         mainAdapter.setSelectionTracker(selectionTracker) //어댑터 생성 후 할당해줘야 한다는 순서지킴
     }
 
-    private fun test() {
-//        binding.floatingBtnDelete.setOnClickListener {
-//            gitAdapter.removeItem(tracker.selection)
-//            tracker.clearSelection()
-//        }
+    private fun deleteData() {
+        binding.btnDelete.setOnClickListener {
+            mainAdapter.removeItem(selectionTracker.selection)
+            selectionTracker.clearSelection()
+        }
     }
 
 

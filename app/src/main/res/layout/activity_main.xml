@@ -29,11 +29,11 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/radius_10_g3_button"
             android:enabled="@{enabled}"
             android:id="@+id/btn_delete"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:background="@color/purple_500"
             android:text="편집"
             android:textColor="@color/white"
             android:textSize="20sp"
