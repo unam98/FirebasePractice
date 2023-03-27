@@ -1,10 +1,10 @@
-package com.example.firebasepractice.presentation
+package com.example.firebasepractice.presentation.report
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.firebasepractice.data.MainData
 
-class MainViewModel : ViewModel() {
+class ReportViewModel : ViewModel() {
 
     val mainDataList = MutableLiveData<List<MainData>>()
 

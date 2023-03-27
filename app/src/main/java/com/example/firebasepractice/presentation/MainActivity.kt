@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     override fun selectItem(id: MainData) {
         val intent = Intent(this, DetailActivity::class.java).apply {
             putExtra("MainData", id)
+            addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         }
         startActivity(intent)
     }
