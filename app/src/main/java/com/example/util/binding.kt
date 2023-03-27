@@ -25,7 +25,8 @@ import com.example.firebasepractice.R
 @BindingAdapter("app:layout_touch_gitItem")
 fun ConstraintLayout.layouttouch(selected: Boolean) {
     if (selected) {
-        setBackgroundColor(ContextCompat.getColor(context, R.color.M1))
+        setBackgroundResource(R.drawable.select)
+//        setBackgroundColor(ContextCompat.getColor(context, R.color.M1))
     } else {
         setBackgroundColor(Color.parseColor("#FFFFFF"))
     }
