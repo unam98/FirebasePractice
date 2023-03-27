@@ -96,6 +96,7 @@ class MainAdapter(private val itemClickListener: OnItemClick) :
                 Log.d(ContentValues.TAG, "선택된 itemId 값 : $itemId")
 
             }
+            binding
             binding.selected = selectionTracker.isSelected(position.toLong()) }
     }
 

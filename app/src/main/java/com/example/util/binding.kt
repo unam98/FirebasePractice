@@ -2,11 +2,13 @@ package com.example.util
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.opengl.Visibility
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.isInvisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.example.firebasepractice.R
@@ -31,6 +33,18 @@ fun ConstraintLayout.layouttouch(selected: Boolean) {
         setBackgroundColor(Color.parseColor("#FFFFFF"))
     }
 }
+
+@SuppressLint("ResourceAsColor")
+@BindingAdapter("app:image_select")
+fun ImageView.loadSelect(selected: Boolean) {
+    if (selected) {
+        setBackgroundResource(R.drawable.select)
+//        setBackgroundColor(ContextCompat.getColor(context, R.color.M1))
+    } else {
+        setBackgroundColor(Color.parseColor("#FFFFFF"))
+    }
+}
+
 
 //@BindingAdapter("app:profile_load")
 //fun ImageView.loadprofile(url: String) {
