@@ -1,4 +1,4 @@
-package com.example.firebasepractice.presentation
+package com.example.firebasepractice.presentation.main
 
 import android.content.ContentValues.TAG
 import android.content.Intent
@@ -7,21 +7,27 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.selection.SelectionTracker
 import com.example.firebasepractice.R
 import com.example.firebasepractice.data.MainData
 import com.example.firebasepractice.databinding.ActivityMainBinding
-import com.example.firebasepractice.presentation.adapter.MainAdapter
+import com.example.firebasepractice.presentation.main.adapter.MainAdapter
+import com.example.firebasepractice.presentation.main.adapter.setSelectionTracker
 import com.example.firebasepractice.presentation.detail.DetailActivity
 import com.example.util.callback.OnItemClick
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnItemClick {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var mainAdapter: MainAdapter
+
     private val viewModel: MainViewModel by viewModels()
+
+    lateinit var selectionTracker: SelectionTracker<Long>
 
 
     val db = Firebase.firestore // Cloud Firestore 인스턴스 초기화
@@ -39,6 +45,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         initAdapter()
         addObserver()
         getFirebaseData()
+        addTrackerObserver() //selection
 
     }
 
@@ -71,6 +78,22 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         viewModel.mainDataList.observe(this) {
             mainAdapter.submitList(viewModel.mainDataList.value)
         }
+    }
+
+    //SelectionTracker.kt로 빼준 함수 활용
+    private fun addTrackerObserver() {
+        selectionTracker =
+            setSelectionTracker("StorageMyDrawSelectionTracker", recyclerView_main)
+        selectionTracker.addObserver((object : SelectionTracker.SelectionObserver<Long>() {
+            override fun onSelectionChanged() {
+                super.onSelectionChanged()
+                val items = selectionTracker.selection.size()
+//                if(items == 0) binding.enabled = false
+//                else binding.enabled = items >= 1 // 선택된 아이템이 1개 이상일 경우 floating button 활성화
+
+            }
+        }))
+        mainAdapter.setSelectionTracker(selectionTracker) //어댑터 생성 후 할당해줘야 한다는 순서지킴
     }
 
     override fun selectItem(id: MainData) {

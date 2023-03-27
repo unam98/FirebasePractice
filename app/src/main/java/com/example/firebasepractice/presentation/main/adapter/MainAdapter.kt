@@ -1,7 +1,9 @@
-package com.example.firebasepractice.presentation.adapter
+package com.example.firebasepractice.presentation.main.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.selection.ItemDetailsLookup
+import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +18,27 @@ import com.google.firebase.ktx.Firebase
 class MainAdapter(private val itemClickListener: OnItemClick) :
     ListAdapter<MainData, MainAdapter.MainItemViewHolder>(Differ) {
 
+    private lateinit var selectionTracker: SelectionTracker<Long>
+
+    init {
+        setHasStableIds(true)
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+
 
     inner class MainItemViewHolder(
         private val binding: ItemMainBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        fun getItemDetails(): ItemDetailsLookup.ItemDetails<Long> =
+            object : ItemDetailsLookup.ItemDetails<Long>() {
+                override fun getPosition(): Int = absoluteAdapterPosition
+                override fun getSelectionKey(): Long = itemId
+            }
 
         fun bindData(data: MainData) {
             with(binding) {
@@ -38,6 +57,9 @@ class MainAdapter(private val itemClickListener: OnItemClick) :
         }
     }
 
+    fun setSelectionTracker(selectionTracker: SelectionTracker<Long>) {
+        this.selectionTracker = selectionTracker
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainItemViewHolder {
         val view = ItemMainBinding.inflate(LayoutInflater.from(parent.context), parent, false)

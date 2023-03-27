@@ -1,4 +1,4 @@
-package com.example.firebasepractice.presentation
+package com.example.firebasepractice.presentation.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
