@@ -11,13 +11,12 @@ import androidx.recyclerview.selection.SelectionTracker
 import com.example.firebasepractice.R
 import com.example.firebasepractice.data.MainData
 import com.example.firebasepractice.databinding.ActivityMainBinding
+import com.example.firebasepractice.presentation.detail.DetailActivity
 import com.example.firebasepractice.presentation.main.adapter.MainAdapter
 import com.example.firebasepractice.presentation.main.adapter.setSelectionTracker
-import com.example.firebasepractice.presentation.detail.DetailActivity
 import com.example.util.callback.OnItemClick
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnItemClick {
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     }
 
     private fun initAdapter() {
-        mainAdapter = MainAdapter(this)
+        mainAdapter = MainAdapter(this, this)
         binding.recyclerViewMain.adapter = mainAdapter
     }
 
@@ -83,24 +82,32 @@ class MainActivity : AppCompatActivity(), OnItemClick {
     //SelectionTracker.kt로 빼준 함수 활용
     private fun addTrackerObserver() {
         selectionTracker =
-            setSelectionTracker("StorageMyDrawSelectionTracker", recyclerView_main)
+            setSelectionTracker("StorageMyDrawSelectionTracker", binding.recyclerViewMain)
         selectionTracker.addObserver((object : SelectionTracker.SelectionObserver<Long>() {
             override fun onSelectionChanged() {
                 super.onSelectionChanged()
                 val items = selectionTracker.selection.size()
-//                if(items == 0) binding.enabled = false
-//                else binding.enabled = items >= 1 // 선택된 아이템이 1개 이상일 경우 floating button 활성화
+                if (items == 0) binding.enabled = false
+                else binding.enabled = items >= 1 // 선택된 아이템이 1개 이상일 경우 floating button 활성화
 
             }
         }))
         mainAdapter.setSelectionTracker(selectionTracker) //어댑터 생성 후 할당해줘야 한다는 순서지킴
     }
 
+    private fun test() {
+//        binding.floatingBtnDelete.setOnClickListener {
+//            gitAdapter.removeItem(tracker.selection)
+//            tracker.clearSelection()
+//        }
+    }
+
+
     override fun selectItem(id: MainData) {
         val intent = Intent(this, DetailActivity::class.java).apply {
             putExtra("MainData", id)
             addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
         }
-        startActivity(intent)
+//        startActivity(intent)
     }
 }

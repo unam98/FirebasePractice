@@ -1,6 +1,5 @@
 package com.example.firebasepractice.presentation.main.adapter
 
-import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
 import androidx.recyclerview.selection.StableIdKeyProvider
 import androidx.recyclerview.selection.StorageStrategy
@@ -12,7 +11,7 @@ fun setSelectionTracker(id: String, recyclerView: RecyclerView): SelectionTracke
         id,
         recyclerView,
         StableIdKeyProvider(recyclerView), // ItemKeyProvider는 리사이클러뷰의 아이템을 눌렀을 때, key를 가져오기 위해서 사용하는 클래스이다.
-        MainLookUp(recyclerView),
+        ItemMainLookUp(recyclerView),
         StorageStrategy.createLongStorage() //ItemKey를 저장시켜놓는 클래스입니다. ItemKeyProvider에 따라, Long, String, Parcelable 형태로 Stroage를 만들어줍니다.
     ).withSelectionPredicate(object : SelectionTracker.SelectionPredicate<Long>() {
         override fun canSetStateForKey(key: Long, nextState: Boolean): Boolean { //무슨 역할?

@@ -7,9 +7,14 @@
         <variable
             name="item"
             type="com.example.firebasepractice.data.MainData" />
+
+        <variable
+            name="selected"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        app:layout_touch_gitItem="@{selected}"
         android:layout_marginHorizontal="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
