@@ -8,5 +8,9 @@ class MainViewModel : ViewModel() {
 
     val mainDataList = MutableLiveData<List<MainData>>()
 
+    val inputName = MutableLiveData<String>()
+    val inputImageUrl = MutableLiveData<String>()
+
+
 
 }

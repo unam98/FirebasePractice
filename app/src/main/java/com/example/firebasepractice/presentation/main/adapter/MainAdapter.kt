@@ -1,12 +1,9 @@
 package com.example.firebasepractice.presentation.main.adapter
 
-import android.annotation.SuppressLint
 import android.content.ContentValues
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.databinding.library.baseAdapters.BR
 import androidx.recyclerview.selection.ItemDetailsLookup
 import androidx.recyclerview.selection.Selection
@@ -15,12 +12,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.firebasepractice.R
 import com.example.firebasepractice.data.MainData
 import com.example.firebasepractice.databinding.ItemMainBinding
 import com.example.util.callback.OnItemClick
-import kotlinx.coroutines.withContext
-import timber.log.Timber
 
 class MainAdapter(private val itemClickListener: OnItemClick) :
     ListAdapter<MainData, MainAdapter.ItemViewHolder>(Differ) {
@@ -57,12 +51,6 @@ class MainAdapter(private val itemClickListener: OnItemClick) :
                     .into(ivMain)
             }
         }
-
-        fun bindViews(data: MainData) {
-            binding.root.setOnClickListener {
-                itemClickListener.selectItem(data)
-            }
-        }
     }
 
     fun setSelectionTracker(selectionTracker: SelectionTracker<Long>) {
@@ -86,17 +74,16 @@ class MainAdapter(private val itemClickListener: OnItemClick) :
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         holder.bindData(currentList[position])
-        holder.bindViews(currentList[position])
 
         with(holder) {
             binding.setVariable(BR.model, getItem(position))
             binding.root.setOnClickListener {
-                selectionTracker.select(position.toLong())
+                itemClickListener.selectItem(currentList[position])
+//                selectionTracker.select(position.toLong())
                 //선택한 item 로그, 근데 최초 선택한 것만 출력됨. 이후 중복 선택된 것들은 안 나옴
                 Log.d(ContentValues.TAG, "선택된 itemId 값 : $itemId")
 
             }
-            binding
             binding.selected = selectionTracker.isSelected(position.toLong()) }
     }
 
