@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         etController()
         addData()
         updateData()
+        deleteData()
 
     }
 
@@ -78,6 +79,16 @@ class MainActivity : AppCompatActivity(), OnItemClick {
                 .update("name", "건대 보호소")
                 .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
                 .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+        }
+    }
+
+    //firestore의 data를 삭제하는 함수
+    private fun deleteData() {
+        binding.btnDeleteData.setOnClickListener {
+            db.collection("data").document("5")
+                .delete()
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
         }
     }
 
