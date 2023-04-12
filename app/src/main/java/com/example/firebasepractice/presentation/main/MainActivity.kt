@@ -17,6 +17,7 @@ import com.example.firebasepractice.presentation.main.adapter.MainAdapter
 import com.example.util.callback.OnItemClick
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.FirebaseMessaging
 import timber.log.Timber
 
 
@@ -46,12 +47,21 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         addData()
         updateData()
         deleteData()
+        getToken()
 
     }
 
     private fun initAdapter() {
         mainAdapter = MainAdapter(this)
         binding.recyclerViewMain.adapter = mainAdapter
+    }
+
+    private fun getToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d(TAG, "토큰 값? : ${task.result}")
+            }
+        }
     }
 
     private fun etController() {
