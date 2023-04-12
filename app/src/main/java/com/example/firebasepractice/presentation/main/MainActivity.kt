@@ -51,12 +51,16 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         addObserver()
         getFirebaseData()
         etController()
-        addDataFirestore()
+        addData()
+        updateData()
 //        deleteData()
         addTrackerObserver() //selection
 
     }
 
+    //https://cdn.pixabay.com/photo/2017/09/25/13/12/puppy-2785074__480.jpg 강남 보호소
+
+    //http://img.seoul.co.kr//img/upload/2021/04/30/SSI_20210430195948.jpg 제주도 보호소 5
     private fun initAdapter() {
         mainAdapter = MainAdapter(this)
         binding.recyclerViewMain.adapter = mainAdapter
@@ -79,12 +83,25 @@ class MainActivity : AppCompatActivity(), OnItemClick {
         }
     }
 
-    private fun addDataFirestore() {
+    private fun updateData() {
+        binding.btnUpdateData.setOnClickListener {
+            val washingtonRef = db.collection("data").document("5")
+
+            //update 메서드의 field는 DB에서의 attribute, value는 새로 갱신할 값
+            washingtonRef
+                .update("name", "건대 보호소")
+                .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully updated!") }
+                .addOnFailureListener { e -> Log.w(TAG, "Error updating document", e) }
+        }
+    }
+
+    private fun addData() {
         binding.btnInputData.setOnClickListener {
             inputData = hashMapOf(
                 "imageUrl" to "${viewModel.inputImageUrl.value}",
                 "name" to "${viewModel.inputName.value}"
             )
+            //add 메서드는 문서ID 값을 자동으로 생성하기 때문에 내가 설정한 문서ID 값으로 data를 추가하고 싶으면 set 메서드를 사용해야 함.
             db.collection("data").add(inputData)
                 .addOnSuccessListener { documentReference ->
                     Toast.makeText(this@MainActivity, "data 추가 성공", Toast.LENGTH_SHORT).show()
@@ -100,23 +117,25 @@ class MainActivity : AppCompatActivity(), OnItemClick {
 
     private fun getFirebaseData() {
         db.collection("data")
-            .get()
-            .addOnSuccessListener { result -> // data 일괄 수신
-                for (document in result) {
-                    val imageUrl = document.data.get("imageUrl") // attribute 별 data 수신
-                    val placeName = document.data.get("name")
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
 
-                    val mainData =
-                        MainData(imageUrl = imageUrl.toString(), placeName = placeName.toString())
+                val mainDataList = mutableListOf<MainData>()
+                for (document in snapshot!!) {//!! 안 붙이면 에러 떠서
+                    val imageUrl = document.getString("imageUrl")
+                    val placeName = document.getString("name")
+                    val mainData = MainData(imageUrl = imageUrl.toString(), placeName = placeName.toString())
                     mainDataList.add(mainData)
                 }
                 viewModel.mainDataList.value = mainDataList
                 Log.d(TAG, "뷰모델 mainDataList 값 : ${viewModel.mainDataList.value}")
             }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Error getting documents: ", exception)
-            }
     }
+
+
 
     private fun addObserver() {
         viewModel.mainDataList.observe(this) {
